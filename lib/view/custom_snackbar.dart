@@ -10,7 +10,7 @@ void showCustomFlash(String message, BuildContext context,
     context.showFlash<bool>(
       barrierColor: Colors.transparent,
       barrierBlur: 0,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 2),
       barrierDismissible: true,
       builder: (context, controller) => FlashBar(
         margin: const EdgeInsets.all(10),

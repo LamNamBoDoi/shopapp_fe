@@ -1,12 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:shopapp_v1/controller/auth_controller.dart';
-import 'package:shopapp_v1/screen/dashboard/dashboard_screen.dart';
+import 'package:shopapp_v1/controller/user_controller.dart';
+import 'package:shopapp_v1/screen/sign_in/splash_loading_screen.dart';
 import 'package:shopapp_v1/screen/sign_up/sign_up_screen.dart';
 import 'package:shopapp_v1/utils/color_resource.dart';
-import 'package:shopapp_v1/utils/images.dart';
 import 'package:shopapp_v1/view/custom_button.dart';
+import 'package:shopapp_v1/view/custom_logo.dart';
 import 'package:shopapp_v1/view/custom_snackbar.dart';
 import 'package:shopapp_v1/view/custom_textfield.dart';
 
@@ -38,35 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(Images.iconShop, width: 60, height: 60),
-                      SizedBox(width: 5),
-                      Text.rich(
-                          textAlign: TextAlign.center,
-                          TextSpan(children: [
-                            TextSpan(
-                              text: "Grocery ",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Borel",
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "Store",
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorResources.getTextColor1(),
-                                  fontFamily: "Borel"),
-                            ),
-                          ]))
-                    ],
-                  ),
+                  customLogo(),
                   SizedBox(
                     height: 30,
                   ),
@@ -132,17 +106,25 @@ class _SignInScreenState extends State<SignInScreen> {
                   CustomButton(
                       labelButton: "Login",
                       onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => DashboardScreen()),
+                        // );
                         ctl
                             .login(phoneNumberCtrl.text, passwordCtrl.text)
-                            .then((value) {
+                            .then((value) async {
                           if (value == 200) {
+                            await Get.find<UserController>().getCurrentUser();
+                            Get.find<PersistentTabController>().jumpToTab(0);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DashboardScreen()),
+                                  builder: (_) => const SplashLoadingScreen()),
                             );
                           } else {
-                            showCustomFlash("account_password_is_incorrect".tr,
+                            showCustomFlash(
+                                "Tài khoản hoặc mật khẩu không đúng".tr,
                                 Get.context!,
                                 isError: true);
                           }

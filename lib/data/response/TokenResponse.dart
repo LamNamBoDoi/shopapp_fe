@@ -1,18 +1,18 @@
 class TokenResponse {
   String? token;
-  String? message;
+  String? refreshToken;
 
-  TokenResponse({this.token, this.message});
+  TokenResponse({this.token, this.refreshToken});
 
   TokenResponse.fromJson(Map<String, dynamic> json) {
     token = json['token'];
-    message = json['message'];
+    refreshToken = json['refresh_token'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['token'] = this.token;
-    data['message'] = this.message;
+    data['token'] = token;
+    data['refresh_token'] = refreshToken;
     return data;
   }
 }

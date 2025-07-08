@@ -1,8 +1,7 @@
-import 'dart:convert'; // chuyển đổi json với đối tượng dart
-import 'dart:developer'; // sử dụng log trong debug
+import 'dart:convert';
 import 'dart:io';
 import 'package:cross_file/cross_file.dart';
-import 'package:flutter/foundation.dart' as foundation; // kiểm tra chế độ debug
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:get/get_connect/http/src/request/request.dart';
@@ -10,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp_v1/data/response/error_response.dart';
 import '../../utils/app_constants.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiClient extends GetxService {
   final String appBaseUrl; // địa chỉ cơ sở
@@ -22,12 +22,13 @@ class ApiClient extends GetxService {
     ),
   );
   String token = "";
+  int storage = 0;
   Map<String, String> _mainHeaders = {};
   ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     token = sharedPreferences.getString(AppConstants.TOKEN) ??
         "Basic Y29yZV9jbGllbnQ6c2VjcmV0";
     if (foundation.kDebugMode) {
-      log('Token: $token');
+      logger.i('Token: $token');
     }
     updateHeader(
       token,
@@ -40,9 +41,10 @@ class ApiClient extends GetxService {
   void updateHeader(
       String token, List<int>? zoneIDs, String? languageCode, int moduleID) {
     Map<String, String> header = {
-      'Content-Type': 'application/json; charset=utf-8',
-      AppConstants.LOCALIZATION_KEY:
-          languageCode ?? AppConstants.languages[0].languageCode,
+      // 'Content-Type': 'application/json; charset=utf-8',
+      'Content-Type': 'application/json',
+      // AppConstants.LOCALIZATION_KEY:
+      //     languageCode ?? AppConstants.languages[0].languageCode,
       'Authorization': token
     };
     header.addAll({AppConstants.MODULE_ID: moduleID.toString()});
@@ -53,7 +55,8 @@ class ApiClient extends GetxService {
       {Map<String, dynamic>? query, Map<String, String>? headers}) async {
     try {
       if (foundation.kDebugMode) {
-        log('====> API Call: $uri\nHeader: $_mainHeaders');
+        logger.i(
+            'Get Request: ${(appBaseUrl) + uri}\nHeader: ${headers ?? _mainHeaders}');
       }
       http.Response response = await http
           .get(
@@ -63,7 +66,7 @@ class ApiClient extends GetxService {
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
-      log('------------${e.toString()}');
+      logger.e('${e.toString()}');
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
@@ -71,10 +74,9 @@ class ApiClient extends GetxService {
   Future<Response> postData(
       String uri, dynamic body, Map<String, String>? headers) async {
     try {
-      String requestBody = jsonEncode(body);
       if (foundation.kDebugMode) {
-        log('====> API Call: $uri\nHeader: $_mainHeaders');
-        log('====> API Body: $requestBody');
+        logger.i(
+            'Post Request: ${(appBaseUrl) + uri}\nHeader: ${headers ?? _mainHeaders}\nAPI Body: $body');
       }
       http.Response response = await http
           .post(
@@ -85,6 +87,7 @@ class ApiClient extends GetxService {
           .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
+      logger.e('Error: ${e.toString()}');
       return Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
@@ -110,12 +113,45 @@ class ApiClient extends GetxService {
     }
   }
 
+  Future<Response> postMultipartData({
+    required String uri,
+    required Map<String, String> body,
+    File? file,
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final request =
+          http.MultipartRequest('POST', Uri.parse(appBaseUrl + uri));
+      request.headers.addAll(headers ?? _mainHeaders);
+      if (foundation.kDebugMode) {
+        logger.i(
+            'Post Multipart Request: ${(appBaseUrl) + uri}\nHeader: ${headers ?? _mainHeaders}');
+      }
+      if (file != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'thumbnail',
+          file.path,
+          contentType: MediaType('image', 'jpeg'), // hoặc 'png'
+          filename: file.path.split('/').last,
+        ));
+      }
+
+      request.fields.addAll(body);
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      return handleResponse(response, uri);
+    } catch (e) {
+      return Response(statusCode: 1, statusText: noInternetMessage);
+    }
+  }
+
   Future<Response> putData(String uri, dynamic body,
       {Map<String, String>? headers}) async {
     try {
       if (foundation.kDebugMode) {
-        log('====> API Call: $uri\nHeader: $_mainHeaders');
-        log('====> API Body: $body');
+        logger.i(
+            'Post Request: ${(appBaseUrl) + uri}\nHeader: ${headers ?? _mainHeaders}\nAPI Body: $body');
       }
       http.Response response = await http
           .put(
@@ -134,7 +170,8 @@ class ApiClient extends GetxService {
       {Map<String, String>? headers}) async {
     try {
       if (foundation.kDebugMode) {
-        log('====> API Call: $uri\nHeader: $_mainHeaders');
+        logger.i(
+            'Post Request: ${(appBaseUrl) + uri}\nHeader: ${headers ?? _mainHeaders}');
       }
       http.Response response = await http
           .delete(
@@ -152,9 +189,9 @@ class ApiClient extends GetxService {
   Response handleResponse(http.Response response, String uri) {
     dynamic body;
     try {
-      body = jsonDecode(utf8.decode(response.bodyBytes));
+      body = jsonDecode(response.body);
     } catch (e) {
-      log(e.toString());
+      logger.e(e.toString());
     }
     Response response0 = Response(
       body: body ?? response.body,
@@ -186,7 +223,8 @@ class ApiClient extends GetxService {
       response0 = Response(statusCode: 0, statusText: noInternetMessage);
     }
     if (foundation.kDebugMode) {
-      ('====> API Response: [${response0.statusCode}] $uri\n${response0.body}');
+      logger
+          .i('API Response: [${response0.statusCode}] $uri\n${response0.body}');
     }
     return response0;
   }

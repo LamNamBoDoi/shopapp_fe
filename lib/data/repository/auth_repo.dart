@@ -34,6 +34,22 @@ class AuthRepo {
         _header);
   }
 
-  Future<Response> signup(User user) async =>
-      await apiClient.postData(AppConstants.REGISTER, jsonEncode(user), null);
+  Future<bool> saveUserToken(String token) async {
+    apiClient.token = "Bearer $token";
+    apiClient.updateHeader("Bearer $token", null,
+        sharedPreferences.getString(AppConstants.LANGUAGE_CODE) ?? "vi", 0);
+    return await sharedPreferences.setString(
+        AppConstants.TOKEN, "Bearer $token");
+  }
+
+  Future<Response> signup(User user) async {
+    Map<String, String> _header = {
+      'Content-Type': 'application/json',
+      // AppConstants.LOCALIZATION_KEY:
+      //     languageCode ?? AppConstants.languages[0].languageCode,
+      // 'Authorization': '$token'
+    };
+    return await apiClient.postData(
+        AppConstants.REGISTER, jsonEncode(user), _header);
+  }
 }
