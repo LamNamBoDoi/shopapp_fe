@@ -8,8 +8,8 @@ class ProductInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
-      color: Colors.white,
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -17,15 +17,11 @@ class ProductInfoWidget extends StatelessWidget {
         children: [
           Text(
             productDetails?.name ?? "",
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
+            style: theme.appBarTheme.titleTextStyle,
           ),
           const SizedBox(height: 8),
           Text(
-            '₫${productDetails?.price?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+            '${productDetails?.price?.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}đ',
             style: const TextStyle(
               fontSize: 24,
               color: Color(0xFFEE4D2D),

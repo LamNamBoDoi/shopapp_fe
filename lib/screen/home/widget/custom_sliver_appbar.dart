@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:shopapp_v1/controller/product_controller.dart';
 import 'package:shopapp_v1/screen/cart/cart_screen.dart';
+import 'package:shopapp_v1/screen/chat/chat_screen.dart';
 import 'package:shopapp_v1/screen/search/search_screen.dart';
 import 'package:shopapp_v1/utils/color_resource.dart';
 import 'package:shopapp_v1/utils/images.dart';
@@ -18,11 +19,12 @@ class CustomSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final productCtl = Get.find<ProductController>();
 
     return SliverAppBar(
         pinned: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
         title: Row(
           children: [
@@ -39,7 +41,6 @@ class CustomSliverAppBar extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: "Borel",
-                        color: Colors.black,
                       ),
                     ),
                     TextSpan(
@@ -48,7 +49,6 @@ class CustomSliverAppBar extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: "Borel",
-                        color: ColorResources.getTextColor1(),
                       ),
                     ),
                   ]),
@@ -74,15 +74,20 @@ class CustomSliverAppBar extends StatelessWidget {
                     width: 30,
                     child: const Icon(
                       Icons.shopping_cart_outlined,
-                      color: Colors.black,
                     ),
                   ),
                 ),
               )),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
-            color: Colors.black54,
+          InkWell(
+            onTap: () => Get.to(() => ChatScreen()),
+            child: Container(
+              margin: const EdgeInsets.only(top: 3, right: 5, left: 5),
+              height: 50,
+              width: 30,
+              child: const Icon(
+                Icons.message_outlined,
+              ),
+            ),
           ),
         ],
         bottom: PreferredSize(

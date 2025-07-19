@@ -4,6 +4,7 @@ import 'package:shopapp_v1/controller/user_controller.dart';
 import 'package:shopapp_v1/screen/info/info_screen.dart';
 import 'package:shopapp_v1/screen/order/order_screen.dart';
 import 'package:shopapp_v1/screen/review/review_screen.dart';
+import 'package:shopapp_v1/screen/setting/setting_screen.dart';
 import 'package:shopapp_v1/screen/sign_in/sign_in_screen.dart';
 import 'package:shopapp_v1/utils/app_constants.dart';
 
@@ -20,52 +21,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final List<Map<String, dynamic>> menuItems = [
     {
       'icon': Icons.shopping_bag_outlined,
-      'title': 'Orders',
+      'title': 'my_orders',
       'function': () => Get.to(() => OrderScreen())
     },
     {
       'icon': Icons.person_outline,
-      'title': 'My Details',
+      'title': 'information',
       'function': () => Get.to(() => InfoScreen())
     },
     {
       'icon': Icons.stars_rounded,
-      'title': 'Đánh giá',
+      'title': 'review',
       'function': () => Get.to(() => ReviewScreen())
     },
-    {'icon': Icons.help_outline, 'title': 'Help', 'function': () {}},
-    {'icon': Icons.info_outline, 'title': 'About', 'function': () {}},
+    {'icon': Icons.help_outline, 'title': 'help', 'function': () {}},
+    {
+      'icon': Icons.settings,
+      'title': 'settings',
+      'function': () => Get.to(() => SettingScreen())
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Profile',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-            fontSize: 22,
-          ),
+          'profile'.tr,
+          style: theme.appBarTheme.titleTextStyle,
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Profile Header Card
             Container(
               margin: EdgeInsets.all(16),
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: isDark
+                        ? Colors.black.withOpacity(0.3)
+                        : Colors.black.withOpacity(0.05),
                     blurRadius: 10,
                     offset: Offset(0, 2),
                   ),
@@ -79,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(60),
                             border: Border.all(
-                              color: Colors.blue.withOpacity(0.2),
+                              color: theme.colorScheme.primary.withOpacity(0.3),
                               width: 3,
                             ),
                           ),
@@ -111,18 +118,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Text(
                           userCtl.userCurrent.fullname ?? "Guest User",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                          style: theme.textTheme.titleLarge?.copyWith(
                             fontSize: 20,
-                            color: Colors.black87,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         SizedBox(height: 4),
                         Text(
                           'Welcome back!',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.7),
                           ),
                         ),
                       ],
@@ -131,15 +136,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
+
+            // Menu Items Card
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16),
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: isDark
+                        ? Colors.black.withOpacity(0.3)
+                        : Colors.black.withOpacity(0.05),
                     blurRadius: 10,
                     offset: Offset(0, 2),
                   ),
@@ -150,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: menuItems.length,
                 separatorBuilder: (context, index) => Divider(
-                  color: Colors.grey[200],
+                  color: theme.colorScheme.onSurface.withOpacity(0.1),
                   thickness: 1,
                   height: 1,
                   indent: 56,
@@ -163,34 +172,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     leading: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1),
+                        color: theme.colorScheme.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
                         item['icon'],
-                        color: Colors.blue,
+                        color: theme.colorScheme.primary,
                         size: 22,
                       ),
                     ),
                     title: Text(
-                      item['title'],
-                      style: TextStyle(
+                      (item['title'] as String).tr,
+                      style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: Colors.black87,
                       ),
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                       size: 16,
-                      color: Colors.grey[400],
+                      color: theme.colorScheme.onSurface.withOpacity(0.4),
                     ),
                     onTap: item['function'],
                   );
                 },
               ),
             ),
+
             SizedBox(height: 24),
+
+            // Logout Button
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16),
               width: double.infinity,
@@ -201,13 +212,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[50],
-                  foregroundColor: Colors.red[600],
+                  backgroundColor: isDark
+                      ? Colors.red[900]?.withOpacity(0.2)
+                      : Colors.red[50],
+                  foregroundColor: isDark ? Colors.red[300] : Colors.red[600],
                   elevation: 0,
                   padding: EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Colors.red[200]!, width: 1),
+                    side: BorderSide(
+                        color: isDark
+                            ? Colors.red[300]!.withOpacity(0.3)
+                            : Colors.red[200]!,
+                        width: 1),
                   ),
                 ),
                 child: Row(
@@ -219,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Log out',
+                      'logout'.tr,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,

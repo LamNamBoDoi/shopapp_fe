@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopapp_v1/data/model/response/product_details.dart';
+import 'package:shopapp_v1/screen/product_detail_screen/widget/all_review_widget.dart';
 import 'package:shopapp_v1/screen/product_detail_screen/widget/review_item.dart';
 
 class ProductReviewWidget extends StatelessWidget {
@@ -18,7 +19,6 @@ class ProductReviewWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -32,10 +32,14 @@ class ProductReviewWidget extends StatelessWidget {
           if (isLongList)
             TextButton(
               onPressed: () {
-                // 👉 TODO: Điều hướng đến trang đánh giá đầy đủ hoặc mở modal
-                // Navigator.push(...);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AllReviewsScreen(reviews: reviews),
+                  ),
+                );
               },
-              child: const Text("Xem tất cả đánh giá"),
+              child: Center(child: const Text("Xem tất cả đánh giá")),
             )
         ],
       ),

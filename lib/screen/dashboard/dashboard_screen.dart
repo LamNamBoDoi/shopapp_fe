@@ -6,11 +6,9 @@ import 'package:shopapp_v1/controller/product_controller.dart';
 import 'package:shopapp_v1/controller/user_controller.dart';
 import 'package:shopapp_v1/controller/wishlist_controller.dart';
 import 'package:shopapp_v1/screen/cart/cart_screen.dart';
-import 'package:shopapp_v1/screen/explore/explore_screen.dart';
 import 'package:shopapp_v1/screen/home/home_screen.dart';
 import 'package:shopapp_v1/screen/like/like_screen.dart';
 import 'package:shopapp_v1/screen/profile/profile_screen.dart';
-import 'package:shopapp_v1/utils/color_resource.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -48,6 +46,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  final theme = Theme.of(Get.context!);
+
   List<Widget> _buildScreens() {
     return const [
       HomeScreen(),
@@ -61,10 +61,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_outlined),
+        icon: Icon(
+          Icons.home_outlined,
+          color: theme.colorScheme.secondary,
+        ),
+        textStyle: theme.textTheme.bodyLarge?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: theme.colorScheme.secondary,
+        ),
         title: "Home",
-        activeColorPrimary: ColorResources.primaryColor,
-        inactiveColorPrimary: Colors.black54,
       ),
       // PersistentBottomNavBarItem(
       //   icon: const Icon(Icons.explore_outlined),
@@ -73,46 +79,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
       //   inactiveColorPrimary: Colors.black54,
       // ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.shopping_cart_outlined),
+        icon: Icon(
+          Icons.shopping_cart_outlined,
+          color: theme.colorScheme.secondary,
+        ),
+        textStyle: theme.textTheme.bodyLarge?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: theme.colorScheme.secondary,
+        ),
         title: "Cart",
-        activeColorPrimary: ColorResources.primaryColor,
-        inactiveColorPrimary: Colors.black54,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.favorite_outline),
+        icon: Icon(
+          Icons.favorite_outline,
+          color: theme.colorScheme.secondary,
+        ),
+        textStyle: theme.textTheme.bodyLarge?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: theme.colorScheme.secondary,
+        ),
         title: "Wishlist",
-        activeColorPrimary: ColorResources.primaryColor,
-        inactiveColorPrimary: Colors.black54,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person_outline),
+        icon: Icon(
+          Icons.person_outline,
+          color: theme.colorScheme.secondary,
+        ),
         title: "Profile",
-        activeColorPrimary: ColorResources.primaryColor,
-        inactiveColorPrimary: Colors.black54,
+        textStyle: theme.textTheme.bodyLarge?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: theme.colorScheme.secondary,
+        ),
       ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: PersistentTabView(
+        body: PersistentTabView(
           context,
           controller: _controller,
           screens: _buildScreens(),
           items: _navBarsItems(),
           confineToSafeArea: true,
           onItemSelected: _handleTabChange,
-          backgroundColor: Colors.white,
+          backgroundColor: theme.colorScheme.surface,
           navBarStyle: NavBarStyle.style1,
-          decoration: const NavBarDecoration(
-            borderRadius: BorderRadius.only(
+          decoration: NavBarDecoration(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            colorBehindNavBar: Colors.white,
-            boxShadow: [
+            colorBehindNavBar: theme.scaffoldBackgroundColor,
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
                 blurRadius: 10,

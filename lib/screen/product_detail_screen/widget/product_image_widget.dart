@@ -13,49 +13,46 @@ class ProductImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          color: Colors.white,
-          child: CarouselSlider(
-            options: CarouselOptions(
-                height: 350,
-                viewportFraction: 1.0,
-                enableInfiniteScroll: images.length > 1,
-                onPageChanged: (index, reason) =>
-                    _currentImageIndex.value = index),
-            items: images.isNotEmpty
-                ? images.map((image) {
-                    return Image.network(
-                      "${AppConstants.BASE_URL}${AppConstants.GET_PRODUCT}/images/${image.imageUrl}",
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 350,
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.image_not_supported,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    );
-                  }).toList()
-                : [
-                    Image.network(
-                      "${AppConstants.BASE_URL}${AppConstants.GET_PRODUCT}/images/notfound.png",
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 350,
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.image_not_supported,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
+        CarouselSlider(
+          options: CarouselOptions(
+              height: 350,
+              viewportFraction: 1.0,
+              enableInfiniteScroll: images.length > 1,
+              onPageChanged: (index, reason) =>
+                  _currentImageIndex.value = index),
+          items: images.isNotEmpty
+              ? images.map((image) {
+                  return Image.network(
+                    "${AppConstants.BASE_URL}${AppConstants.GET_PRODUCT}/images/${image.imageUrl}",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 350,
+                      color: Colors.grey[200],
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        size: 100,
+                        color: Colors.grey,
                       ),
                     ),
-                  ],
-          ),
+                  );
+                }).toList()
+              : [
+                  Image.network(
+                    "${AppConstants.BASE_URL}${AppConstants.GET_PRODUCT}/images/notfound.png",
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 350,
+                      color: Colors.grey[200],
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
         ),
         if (images.length > 1)
           Obx(() {

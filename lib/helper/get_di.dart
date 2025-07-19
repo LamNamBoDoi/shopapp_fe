@@ -7,6 +7,7 @@ import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp_v1/controller/auth_controller.dart';
 import 'package:shopapp_v1/controller/category_controller.dart';
+import 'package:shopapp_v1/controller/localization_controller.dart';
 import 'package:shopapp_v1/controller/order_controller.dart';
 import 'package:shopapp_v1/controller/product_controller.dart';
 import 'package:shopapp_v1/controller/review_controller.dart';
@@ -41,6 +42,7 @@ Future<Map<String, Map<String, String>>> init() async {
   Get.lazyPut(() => WishlistRepo(apiClient: Get.find()));
   Get.lazyPut(() => ReviewRepo(apiClient: Get.find()));
   // Controller
+  Get.lazyPut(() => LocalizationController(sharedPreferences: Get.find()));
   Get.lazyPut(() => ThemeController(sharedPreferences: Get.find()));
   Get.lazyPut(() => AuthController(repo: Get.find()));
   Get.lazyPut(() => CategoryController(repo: Get.find()));

@@ -31,6 +31,8 @@ class AppConstants {
   static const String LANGUAGE_CODE = 'language_code';
   static const String LOCALIZATION_KEY = 'X-localization';
   static const String MODULE_ID = 'moduleId';
+  static const String COUNTRY_CODE = 'country_code';
+
   static List<LanguageModel> languages = [
     LanguageModel(
         imageUrl: Images.vietnam,

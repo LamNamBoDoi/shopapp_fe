@@ -14,7 +14,7 @@ class ThemeController extends GetxController implements GetxService {
   Color? _lightColor;
   Color? _darkColor;
 
-  bool? get darkTheme => _darkTheme;
+  bool? get darkTheme => _darkTheme!;
   Color? get darkColor => _darkColor;
   Color? get lightColor => _lightColor;
 

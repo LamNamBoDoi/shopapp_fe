@@ -34,6 +34,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     const kSectionDivider = Divider(
       height: 2,
       thickness: 2,
@@ -54,18 +55,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         this.runAddToCartAnimation = runAddToCartAnimation;
       },
       child: Scaffold(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text(
             widget.productDetails?.name ?? "",
-            style: const TextStyle(fontSize: 18, color: Colors.black),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: InkWell(
             onTap: () => Get.back(),
-            child: const Icon(Icons.arrow_back, color: Colors.black),
+            child: const Icon(Icons.arrow_back),
           ),
+          iconTheme: theme.appBarTheme.iconTheme,
           actions: [
             Obx(() => badges.Badge(
                   position: badges.BadgePosition.topEnd(top: 4, end: -4),
@@ -78,7 +83,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     badgeColor: Colors.red,
                   ),
                   child: InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      await Get.find<ProductController>().getProductIds();
+                      Get.find<ProductController>().updateTotalMoney();
                       Get.back();
                       Get.find<PersistentTabController>().jumpToTab(1);
                     },
@@ -89,7 +96,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: Icon(
                         key: cartKey,
                         Icons.shopping_cart_outlined,
-                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -102,7 +108,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Icons.favorite,
                         color: Colors.red,
                       )
-                    : Icon(Icons.favorite_border, color: Colors.black),
+                    : Icon(
+                        Icons.favorite_border,
+                      ),
                 onPressed: () {
                   if (wishlistCtl.listWishlist
                       .any((w) => w.productId == widget.productDetails?.id)) {

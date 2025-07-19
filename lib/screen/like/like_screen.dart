@@ -10,19 +10,17 @@ class LikeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final wishlistCtl = Get.find<WishlistController>();
     final productCtl = Get.find<ProductController>();
     return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            'Yêu thích',
-            style: TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
-              fontSize: 22,
-            ),
+            'favorite'.tr,
+            style: theme.appBarTheme.titleTextStyle,
           ),
           centerTitle: true,
         ),

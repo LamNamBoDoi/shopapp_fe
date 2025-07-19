@@ -20,9 +20,10 @@ class ProductLikeItem extends StatelessWidget {
   final Wishlist wishlist;
   final wishlistCtl = Get.find<WishlistController>();
   final userCtl = Get.find<UserController>();
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final imageUrl = product.thumbnail != null && product.thumbnail!.isNotEmpty
         ? "${AppConstants.BASE_URL}${AppConstants.GET_PRODUCT}/images/${product.thumbnail!}"
         : "${AppConstants.BASE_URL}${AppConstants.GET_PRODUCT}/images/notfound.png";
@@ -30,7 +31,7 @@ class ProductLikeItem extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 4,
-      shadowColor: Colors.grey.withOpacity(0.2),
+      color: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
@@ -43,14 +44,6 @@ class ProductLikeItem extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white,
-                Colors.grey.shade50,
-              ],
-            ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -97,11 +90,10 @@ class ProductLikeItem extends StatelessWidget {
                     children: [
                       Text(
                         product.name ?? 'Tên sản phẩm',
-                        style: const TextStyle(
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          height: 1.3,
+                          color: theme.colorScheme.onSurface,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

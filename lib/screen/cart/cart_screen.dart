@@ -17,17 +17,15 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Giỏ hàng',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w500,
-            fontSize: 22,
-          ),
+          'my_cart'.tr,
+          style: theme.appBarTheme.titleTextStyle,
         ),
         centerTitle: true,
       ),
@@ -58,7 +56,7 @@ class _CartScreenState extends State<CartScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
-                      color: Colors.white,
+                      color: theme.colorScheme.onSurface.withOpacity(0.2),
                       child: Row(
                         children: [
                           Checkbox(
@@ -73,6 +71,9 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Expanded(
                       child: Obx(() {
@@ -102,8 +103,8 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     Container(
                       padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.onSurface.withOpacity(0.2),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black12,
@@ -118,8 +119,14 @@ class _CartScreenState extends State<CartScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Tổng thanh toán",
-                                  style: TextStyle(fontSize: 16)),
+                              Text(
+                                "Tổng thanh toán",
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              ),
                               Obx(() {
                                 return Text(
                                   "${productCtl.totalMoney.value}₫",

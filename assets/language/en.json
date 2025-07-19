@@ -1,4 +1,7 @@
 {
+  "help": "Help",
+  "light_mode": "Light",
+  "theme": "Theme",
   "please_enter_name": "Please enter name",
   "update_profile_successfully": "Update profile successfully",
   "update_profile_failed": "Update profile failed",
@@ -143,6 +146,7 @@
   "search_food_or_restaurant": "Search your desired service or laundry shop",
   "search_item_or_store": "Search your desired items or stores",
   "categories": "Categories",
+  "category": "Category",
   "popular_items_nearby": "Popular Items Nearby",
   "restaurants": "Laundry shop",
   "stores": "Stores",

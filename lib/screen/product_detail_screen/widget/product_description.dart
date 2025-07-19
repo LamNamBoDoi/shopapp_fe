@@ -5,18 +5,15 @@ class ProductDescription extends StatelessWidget {
   final String? description;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Mô tả sản phẩm',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87),
+            style: theme.appBarTheme.titleTextStyle,
           ),
           const SizedBox(height: 8),
           Text(

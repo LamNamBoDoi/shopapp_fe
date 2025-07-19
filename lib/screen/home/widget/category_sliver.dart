@@ -25,7 +25,7 @@ class CategorySliver extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Categories",
+                    Text("category".tr,
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600)),
                     Text("See all >",
